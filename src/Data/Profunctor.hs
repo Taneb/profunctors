@@ -221,6 +221,12 @@ instance Comonad w => Choice (Cokleisli w) where
   right' = right
   {-# INLINE right' #-}
 
+instance Applicative f => Choice (UpStar f) where
+  left' (UpStar fab) = UpStar (either (fmap Left . fab) (fmap Right . pure)
+  {-# INLINE left' #-}
+  right' (UpStar fab) = UpStar (either (fmap Left . pure) (fmap Right . fab)
+  {-# INLINE right' #-}
+
 -- | 'sequence' approximates 'costrength'
 instance Traversable w => Choice (DownStar w) where
   left' (DownStar wab) = DownStar (either Right Left . fmap wab . traverse (either Right Left))
